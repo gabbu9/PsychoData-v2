@@ -27,7 +27,7 @@ public class CalculatorTest{
     public void test_addNegativeNumbers_shouldBeAdded(){
         int x = -5, y = -10;
 
-        Assert.assertEquals((-5)+(10), Calculator.add(x, y));
+        Assert.assertEquals((-5)+(-10), Calculator.add(x, y));
     }
 
     @Test
