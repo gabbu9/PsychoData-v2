@@ -16,6 +16,9 @@ public class Game{
         }while(!setNumPlayers(playerCount));
         players = new Player[playerCount];
         map = new MyMap(playerCount);
+        for(int i = 0; i < playerCount; i++){
+            players[i] = new Player(map);
+        }
         generateMainHTMLFile();
         generatePlayerHTMLFiles();
     }
@@ -46,7 +49,7 @@ public class Game{
                 sb.append(ROW_START);
                 for(int j = 0; j < MyMap.getSize(); j++){
                     sb.append(COLUMN_START);
-                    if(i == Player.getX() && j == Player.getX()){
+                    if(i == Player.getX() && j == Player.getY()){
                         sb.append(" class=\"tg-d52n\">");
                         sb.append("<img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-64.png\"");
                     }
