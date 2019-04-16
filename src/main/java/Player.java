@@ -9,8 +9,8 @@ public class Player{
     
     public Player(MyMap currMap){
         do{
-            randX = (int)Math.random()*currMap.getSize();
-            randY = (int)Math.random()*currMap.getSize();
+            randX = (int)(Math.random()*currMap.getSize());
+            randY = (int)(Math.random()*currMap.getSize());
         }while(currMap.getTileType(randX,randY)!='g');
         System.out.println("Start Position: ("+randX+","+randY+")");
         pos.setX(randX);
