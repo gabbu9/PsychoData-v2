@@ -75,7 +75,9 @@ public class Game{
                     
                     //if(i == players[player].getY() && j == players[player].getX()){
                     if(players[player].getVisited(j,i)){
-                        sb.append(" class=\"tg-d52n\"");
+                        if(MyMap.getTileType(i,j)=='w')sb.append(" class=\"tg-2n01\"");
+                        else if(MyMap.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
+                        else if(MyMap.getTileType(i,j)=='y')sb.append(" class=\"tg-kusv\"");
                         coloured = true;
                     }
                     //}
