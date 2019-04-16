@@ -12,12 +12,6 @@ class MyMap{
         if(setMapSize(size,size)){
             generate();
             System.out.println("Generated Map with size: "+size+" x "+size);
-            // for(int i = 0;i<size;i++){
-                // for (int j = 0; j<size; j++){
-                    // System.out.print(getTileType(i,j)+" ");
-                // }
-                // System.out.print("\n");
-            // }
         }
     }
     public boolean setMapSize(int x, int y){
