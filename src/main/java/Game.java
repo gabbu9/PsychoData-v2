@@ -2,12 +2,17 @@ import java.util.*;
 import java.io.*;
 public class Game{
     static Scanner in = new Scanner(System.in);
-    int turns;
+    //private int turns;
     static Player players[];
+    private boolean alive[];
     static MyMap map;
-    public static void main(String args[]){
-        System.out.println("Enter Player Count");
-        int playerCount = in.nextInt();
+    private int playerCount;
+    private Vector<Position> visited = new Vector<Position>();
+    
+    public Game(){
+        System.out.print('\u000C');
+        System.out.print("Enter Player Count: ");
+        playerCount = in.nextInt();
         do{
             if(!setNumPlayers(playerCount)){
                 System.out.println("Player Count needs to be between 2 and 8\n\nEnter Player Count");
@@ -15,30 +20,49 @@ public class Game{
             }
         }while(!setNumPlayers(playerCount));
         players = new Player[playerCount];
+        alive = new boolean[playerCount];
         map = new MyMap(playerCount);
         for(int i = 0; i < playerCount; i++){
+            System.out.print("Player "+(i+1)+" ");
             players[i] = new Player(map);
+            alive[i] = true;
         }
         generateMainHTMLFile();
         generatePlayerHTMLFiles();
+        startGame();
     }
 
     public void startGame(){
+        for(int i = -1;i<playerCount;){
+            i++;
+            if(alive[i]==true){
+                System.out.println("Currently at: ("+players[i].getX()+","+players[i].getY()+")");
+                System.out.print("Enter move for player "+(i+1)+": ");
+                players[i].move(in.next().charAt(0));
+                if(map.getTileType(players[i].getX(),players[i].getY())=='w')alive[i]=false;
+                if(map.getTileType(players[i].getX(),players[i].getY())=='y')break;
+            }
+            if(i==playerCount-1){
+                i=-1;
+            }
+            generatePlayerHTMLFiles();
+        }
     }
 
-    public static boolean setNumPlayers(int n){
+    public boolean setNumPlayers(int n){
         if(n>=2 && n<=8){
             return true;
-        }
-        else{
+        }else{
             return false;
         }
     }
 
-    public static void generatePlayerHTMLFiles(){
-        int player = 1;
+    public void generatePlayerHTMLFiles(){
+        int player = 0;
+        boolean coloured = false;
         do{
-            File f = new File("player"+player+"File.html");
+            File f = new File("map_player_"+(player+1)+".html");
+            visited = new Vector<Position>(players[player].getVisited());
             StringBuilder table = new StringBuilder();
             String ROW_START = "<tr>";
             String ROW_END = "</tr>";
@@ -49,11 +73,16 @@ public class Game{
                 sb.append(ROW_START);
                 for(int j = 0; j < MyMap.getSize(); j++){
                     sb.append(COLUMN_START);
-                    if(i == Player.getX() && j == Player.getY()){
-                        sb.append(" class=\"tg-d52n\">");
-                        sb.append("<img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-64.png\"");
+                    coloured = false;
+                    for(Position pos : visited){
+                        if(i == pos.getY() && j == pos.getX()){
+                            sb.append(" class=\"tg-d52n\"");
+                            coloured = true;
+                        }
                     }
-                    else sb.append(" class=\"tg-c6of\"");
+                    if(i == players[player].getY() && j == players[player].getX()){
+                        sb.append("><img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-64.png\"");
+                    }else if(!coloured) sb.append(" class=\"tg-c6of\"");
                     sb.append(MyMap.getTileType(i,j));
                     sb.append(COLUMN_END);
                 }
@@ -69,12 +98,12 @@ public class Game{
             }catch(IOException io){
                 io.printStackTrace();
             }
-            System.out.println("Wrote to file");
+            System.out.println("Wrote to file: map_player_"+(player+1)+".html");
             player++;
-        }while(player <= players.length);
+        }while(player < players.length);
     }
     
-    public static void generateMainHTMLFile(){
+    public void generateMainHTMLFile(){
         File f = new File("mapFile.html");
         StringBuilder table = new StringBuilder();
         String ROW_START = "<tr>";
@@ -104,6 +133,6 @@ public class Game{
         }catch(IOException io){
             io.printStackTrace();
         }
-        System.out.println("Wrote to file");
+        System.out.println("Wrote to file: mapFile.html");
     }
 }

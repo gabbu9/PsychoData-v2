@@ -1,11 +1,12 @@
 import java.awt.event.*;
 import java.awt.Image;
 import java.awt.Graphics2D;
-
+import java.util.*;
 public class Player{
     private static int randX = 0, randY = 0;   
     private static int maxSize;
-    private static Position pos = new Position();
+    private Position pos = new Position();
+    private Vector<Position> visited = new Vector<Position>();
 
     public Player(MyMap currMap){
         do{
@@ -15,17 +16,18 @@ public class Player{
         System.out.println("Start Position: ("+randX+","+randY+")");
         pos.setX(randX);
         pos.setY(randY);
+        visited.add(pos);
         this.maxSize = currMap.getSize();
     }//not sure if you can generate multiple players
 
     public void move(char direction){ //updating player position
         if(direction == 'U'){
-            if(setPosition(pos.getY()+1)){
-                pos.setY(pos.getY()+1);
-            }
-        }else if(direction == 'D'){
             if(setPosition(pos.getY()-1)){
                 pos.setY(pos.getY()-1);
+            }
+        }else if(direction == 'D'){
+            if(setPosition(pos.getY()+1)){
+                pos.setY(pos.getY()+1);
             }
         }else if(direction == 'R'){
             if(setPosition(pos.getX()+1)){
@@ -39,6 +41,7 @@ public class Player{
             System.out.println("Invalid direction");
             return;
         }
+        visited.add(pos);
         System.out.println("Moved to: ("+pos.getX()+","+pos.getY()+")");
     }
 
@@ -50,11 +53,11 @@ public class Player{
         }
     }
 
-    public static int getX(){
+    public int getX(){
         return pos.getX();
     }
 
-    public static int getY(){
+    public int getY(){
         return pos.getY();
     }
 
@@ -64,6 +67,10 @@ public class Player{
 
     public void setY(int y){
         pos.setY(y);
+    }
+    
+    public Vector<Position> getVisited(){
+        return visited;
     }
 
     /*public void draw(Graphics2D g2d){
