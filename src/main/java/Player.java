@@ -72,38 +72,4 @@ public class Player{
     public boolean getVisited(int i,int j){
         return visited[i][j];
     }
-
-    /*public void draw(Graphics2D g2d){
-    g2d.drawImage(getPlayerImg(),x,y,null);
-    }
-    public Image getPlayerImg() {
-    ImageIcon ic = new ImageIcon();//upload player image here
-    return ic.getImage();
-    }*/
-
-    // public void keyPressed(KeyEvent e){
-    // int key = e.getKeyCode();
-    // if(key == KeyEvent.VK_U){ //UP
-    // dy = -1;   
-    // } else if (key == KeyEvent.VK_D) { //DOWN
-    // dy = 1; 
-    // } else if (key == KeyEvent.VK_L) { //LEFT
-    // dx = -1; 
-    // } else if (key == KeyEvent.VK_R) { //RIGHT 
-    // dx = 1; 
-    // }
-    // }
-
-    // public void keyReleased(KeyEvent e){
-    // int key = e.getKeyCode();
-    // if(key == KeyEvent.VK_U){ 
-    // dy = 0;   
-    // } else if (key == KeyEvent.VK_D) { 
-    // dy = 0;    
-    // } else if (key == KeyEvent.VK_L) { 
-    // dx = 0; 
-    // } else if (key == KeyEvent.VK_R) { 
-    // dx = 0;  
-    // }
-    // }
 }
