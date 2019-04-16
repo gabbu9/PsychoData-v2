@@ -7,7 +7,6 @@ public class Game{
     private boolean alive[];
     static MyMap map;
     private int playerCount;
-    private Vector<Position> visited = new Vector<Position>();
     
     public Game(){
         System.out.print('\u000C');
@@ -62,7 +61,6 @@ public class Game{
         boolean coloured = false;
         do{
             File f = new File("map_player_"+(player+1)+".html");
-            visited = new Vector<Position>(players[player].getVisited());
             StringBuilder table = new StringBuilder();
             String ROW_START = "<tr>";
             String ROW_END = "</tr>";
@@ -74,12 +72,13 @@ public class Game{
                 for(int j = 0; j < MyMap.getSize(); j++){
                     sb.append(COLUMN_START);
                     coloured = false;
-                    for(Position pos : visited){
-                        if(i == pos.getY() && j == pos.getX()){
-                            sb.append(" class=\"tg-d52n\"");
-                            coloured = true;
-                        }
+                    
+                    //if(i == players[player].getY() && j == players[player].getX()){
+                    if(players[player].getVisited(j,i)){
+                        sb.append(" class=\"tg-d52n\"");
+                        coloured = true;
                     }
+                    //}
                     if(i == players[player].getY() && j == players[player].getX()){
                         sb.append("><img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-64.png\"");
                     }else if(!coloured) sb.append(" class=\"tg-c6of\"");
