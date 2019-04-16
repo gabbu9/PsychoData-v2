@@ -5,7 +5,7 @@ public class Game{
     int turns;
     static Player players[];
     static MyMap map;
-   public static void main(String args[]){
+    public static void main(String args[]){
         System.out.println("Enter Player Count");
         int playerCount = in.nextInt();
         do{
@@ -16,9 +16,9 @@ public class Game{
         }while(!setNumPlayers(playerCount));
         players = new Player[playerCount];
         map = new MyMap(playerCount);
-        generateHTMLFiles();
+        generateMainHTMLFile();
+        generatePlayerHTMLFiles();
     }
-
 
     public void startGame(){
     }
@@ -32,8 +32,47 @@ public class Game{
         }
     }
 
-    public static void generateHTMLFiles(){
-        File f = new File("htmlFile.html");
+    public static void generatePlayerHTMLFiles(){
+        int player = 1;
+        do{
+            File f = new File("player"+player+"File.html");
+            StringBuilder table = new StringBuilder();
+            String ROW_START = "<tr>";
+            String ROW_END = "</tr>";
+            String COLUMN_START = "<td";
+            String COLUMN_END = "></td>";
+            for(int i = 0; i < MyMap.getSize(); i++){
+                StringBuilder sb = new StringBuilder();
+                sb.append(ROW_START);
+                for(int j = 0; j < MyMap.getSize(); j++){
+                    sb.append(COLUMN_START);
+                    if(i == Player.getX() && j == Player.getX()){
+                        sb.append(" class=\"tg-d52n\">");
+                        sb.append("<img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-64.png\"");
+                    }
+                    else sb.append(" class=\"tg-c6of\"");
+                    sb.append(MyMap.getTileType(i,j));
+                    sb.append(COLUMN_END);
+                }
+                sb.append(ROW_END);
+                table.append(sb.toString());
+            }
+            String style = "<style type=\"text/css\">.tg  {border-collapse:collapse;border-spacing:0;}.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}.tg .tg-kusv{background-color:#fffe65;border-color:inherit;text-align:left;vertical-align:top}.tg .tg-2n01{background-color:#3531ff;border-color:inherit;text-align:left;vertical-align:top}.tg .tg-d52n{background-color:#32cb00;border-color:inherit;text-align:left;vertical-align:top}.tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}</style>";
+            String toWrite = style+"<table class=\"tg\">"+table.toString()+"</table>";
+            try{
+                BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+                bw.write(toWrite);
+                bw.close();
+            }catch(IOException io){
+                io.printStackTrace();
+            }
+            System.out.println("Wrote to file");
+            player++;
+        }while(player <= players.length);
+    }
+    
+    public static void generateMainHTMLFile(){
+        File f = new File("mapFile.html");
         StringBuilder table = new StringBuilder();
         String ROW_START = "<tr>";
         String ROW_END = "</tr>";
