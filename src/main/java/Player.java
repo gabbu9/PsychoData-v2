@@ -3,52 +3,67 @@ import java.awt.Image;
 import java.awt.Graphics2D;
 
 public class Player{
-    private int x,y;
-    private int dx = 0,dy = 0;//velocities   
-    private int width1,length1; //frame dimensions
+    private int randX = 0, randY = 0;   
+    private int maxSize;
+    private Position pos = new Position();
     
-    public Player(int x, int y, int width, int length){ //setting coordinates for player, x & y need to be randomly generated values for player coordinates, width & height is the size of the arena of which values depend on user input
-        this.x = x;
-        this.y = y;
-        this.width1 = width;
-        this.length1 = length;
+    public Player(MyMap currMap){
+        do{
+            randX = (int)Math.random()*currMap.getSize();
+            randY = (int)Math.random()*currMap.getSize();
+        }while(currMap.getTileType(randX,randY)!='g');
+        System.out.println("Start Position: ("+randX+","+randY+")");
+        pos.setX(randX);
+        pos.setY(randY);
+        this.maxSize = currMap.getSize();
     }//not sure if you can generate multiple players
     
-    public void update(){ //updating player position
-        this.x += dx;
-        this.y += dy;
-        
-        if (x < 1) {//ensuring no collision on x-axis
-            x = 1;
+    public void move(char direction){ //updating player position
+        if(direction == 'U'){
+            if(setPosition(pos.getY()+1)){
+                pos.setY(pos.getY()+1);
+            }
+        }else if(direction == 'D'){
+            if(setPosition(pos.getY()-1)){
+                pos.setY(pos.getY()-1);
+            }
+        }else if(direction == 'R'){
+            if(setPosition(pos.getX()+1)){
+                pos.setX(pos.getX()+1);
+            }
+        }else if(direction == 'L'){
+            if(setPosition(pos.getX()-1)){
+                pos.setX(pos.getX()-1);
+            }
+        }else{
+            System.out.println("Invalid direction");
+            return;
         }
-        
-        if (x > width1){
-            x = width1;
-        }
-        
-        if (y < 1) {//ensuring no collision on y-axis
-            y = 1;
-        }
-        
-        if (y > length1){
-            y = length1;
+        System.out.println("Moved to: ("+pos.getX()+","+pos.getY()+")");
+    }
+    
+    public boolean setPosition(int x){
+        if(x < 0 || x > maxSize){
+            return false;
+        }else{
+            return true;
         }
     }
     
     public int getX(){
-        return x;
+        return pos.getX();
     }
     
     public int getY(){
-        return y;
+        return pos.getY();
     }
     
     public void setX(int x){
-        this.x = x;
+        pos.setX(x);
     }
     
     public void setY(int y){
-        this.y = y;
+        pos.setY(y);
     }
     
     /*public void draw(Graphics2D g2d){
@@ -60,29 +75,29 @@ public class Player{
         return ic.getImage();
     }*/
     
-    public void keyPressed(KeyEvent e){
-        int key = e.getKeyCode();
-        if(key == KeyEvent.VK_U){ //UP
-            dy = -1;   
-        } else if (key == KeyEvent.VK_D) { //DOWN
-            dy = 1; 
-        } else if (key == KeyEvent.VK_L) { //LEFT
-            dx = -1; 
-        } else if (key == KeyEvent.VK_R) { //RIGHT 
-            dx = 1; 
-        }
-    }
+    // public void keyPressed(KeyEvent e){
+        // int key = e.getKeyCode();
+        // if(key == KeyEvent.VK_U){ //UP
+            // dy = -1;   
+        // } else if (key == KeyEvent.VK_D) { //DOWN
+            // dy = 1; 
+        // } else if (key == KeyEvent.VK_L) { //LEFT
+            // dx = -1; 
+        // } else if (key == KeyEvent.VK_R) { //RIGHT 
+            // dx = 1; 
+        // }
+    // }
 
-    public void keyReleased(KeyEvent e){
-        int key = e.getKeyCode();
-        if(key == KeyEvent.VK_U){ 
-            dy = 0;   
-        } else if (key == KeyEvent.VK_D) { 
-            dy = 0;    
-        } else if (key == KeyEvent.VK_L) { 
-            dx = 0; 
-        } else if (key == KeyEvent.VK_R) { 
-            dx = 0;  
-        }
-    }
+    // public void keyReleased(KeyEvent e){
+        // int key = e.getKeyCode();
+        // if(key == KeyEvent.VK_U){ 
+            // dy = 0;   
+        // } else if (key == KeyEvent.VK_D) { 
+            // dy = 0;    
+        // } else if (key == KeyEvent.VK_L) { 
+            // dx = 0; 
+        // } else if (key == KeyEvent.VK_R) { 
+            // dx = 0;  
+        // }
+    // }
 }

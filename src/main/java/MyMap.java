@@ -12,6 +12,12 @@ class MyMap{
         if(setMapSize(size,size)){
             generate();
             System.out.println("Generated Map with size: "+size+" x "+size);
+            // for(int i = 0;i<size;i++){
+                // for (int j = 0; j<size; j++){
+                    // System.out.print(getTileType(i,j)+" ");
+                // }
+                // System.out.print("\n");
+            // }
         }
     }
     public boolean setMapSize(int x, int y){
@@ -32,12 +38,9 @@ class MyMap{
         MyMap[(int)(Math.random()*size)][(int)(Math.random()*size)]='y';
     }
     public static char getTileType(int x, int y){
-        return MyMap[x][y];
+        return MyMap[y][x];
     }
     public static int getSize(){
         return size;
-    }
-    public static char[] getMyMap(int i){
-        return MyMap[i];
     }
 }
