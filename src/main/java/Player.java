@@ -18,7 +18,7 @@ public class Player{
         this.maxSize = currMap.getSize();
         visited = new boolean[currMap.getSize()][currMap.getSize()];
         visited[pos.getX()][pos.getY()] = true;
-    }//not sure if you can generate multiple players
+    }
 
     public void move(char direction){ //updating player position
         if(direction == 'U'){
