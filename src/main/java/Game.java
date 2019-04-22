@@ -12,6 +12,7 @@ public class Game{
     public Game(){
         System.out.print('\u000C');
         System.out.print("Enter Player Count: ");
+        
         playerCount = in.nextInt();
         do{
             if(!setNumPlayers(playerCount)){
@@ -38,7 +39,14 @@ public class Game{
             if(alive[player]==true){
                 System.out.println("Currently at: ("+players[player].getX()+","+players[player].getY()+")");
                 System.out.print("Enter move for player "+(player+1)+": ");
-                players[player].move(in.next().charAt(0));
+                //players[player].move(in.next().charAt(0));
+                if(players[player].move(in.next().charAt(0)) == false){
+                    do{
+                        System.out.println("Moving out of Map\nPick another Move");
+                        System.out.print("Enter move for player "+(player+1)+": ");
+                        players[player].move(in.next().charAt(0));
+                    }while(players[player].move(in.next().charAt(0)) == false);
+                }
                 //if(map.getTileType(players[player].getX(),players[player].getY())=='w')alive[player]=false;
                 //if(map.getTileType(players[player].getX(),players[player].getY())=='y')break;
             }
