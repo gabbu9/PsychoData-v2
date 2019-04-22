@@ -7,6 +7,7 @@ public class Game{
     private boolean alive[];
     static MyMap map;
     private int playerCount;
+    private boolean treasure = false;
     
     public Game(){
         System.out.print('\u000C');
@@ -32,20 +33,26 @@ public class Game{
     }
 
     public void startGame(){
-        for(int i = -1;i<playerCount;){
-            i++;
-            if(alive[i]==true){
-                System.out.println("Currently at: ("+players[i].getX()+","+players[i].getY()+")");
-                System.out.print("Enter move for player "+(i+1)+": ");
-                players[i].move(in.next().charAt(0));
-                if(map.getTileType(players[i].getX(),players[i].getY())=='w')alive[i]=false;
-                if(map.getTileType(players[i].getX(),players[i].getY())=='y')break;
+        int player = 0;
+        do{
+            if(alive[player]==true){
+                System.out.println("Currently at: ("+players[player].getX()+","+players[player].getY()+")");
+                System.out.print("Enter move for player "+(player+1)+": ");
+                players[player].move(in.next().charAt(0));
+                //if(map.getTileType(players[player].getX(),players[player].getY())=='w')alive[player]=false;
+                //if(map.getTileType(players[player].getX(),players[player].getY())=='y')break;
             }
-            if(i==playerCount-1){
-                i=-1;
-            }
+            if(player == players.length-1)
+                player = -1;
+/*            if(player==playerCount-1){
+                player=-1;
+            }*/
             generatePlayerHTMLFiles();
-        }
+            if(treasure == true){
+                return;
+            }
+            player++;
+        }while(player < players.length);
     }
 
     public boolean setNumPlayers(int n){
@@ -75,14 +82,23 @@ public class Game{
                     
                     //if(i == players[player].getY() && j == players[player].getX()){
                     if(players[player].getVisited(j,i)){
-                        if(MyMap.getTileType(i,j)=='w')sb.append(" class=\"tg-2n01\"");
+                        if(MyMap.getTileType(i,j)=='w'){
+                            sb.append(" class=\"tg-2n01\"");
+                            alive[player] = false;
+                            System.out.println("Player "+(player+1)+" died");
+                        }
                         else if(MyMap.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
-                        else if(MyMap.getTileType(i,j)=='y')sb.append(" class=\"tg-kusv\"");
+                        else if(MyMap.getTileType(i,j)=='y'){
+                            sb.append(" class=\"tg-kusv\"");
+                            System.out.println("Player "+(player+1)+" found the treasure\nPlayer "+(player+1)+" Wins\nGame Over");
+                            treasure = true;
+                            return;
+                        }
                         coloured = true;
                     }
                     //}
                     if(i == players[player].getY() && j == players[player].getX()){
-                        sb.append("><img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-64.png\"");
+                        sb.append("><img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-16.png\"");
                     }else if(!coloured) sb.append(" class=\"tg-c6of\"");
                     sb.append(MyMap.getTileType(i,j));
                     sb.append(COLUMN_END);
