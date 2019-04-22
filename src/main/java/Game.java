@@ -12,12 +12,25 @@ public class Game{
     public Game(){
         System.out.print('\u000C');
         System.out.print("Enter Player Count: ");
+        String input;
+        try{
+           input = in.next();
+           playerCount = Integer.parseInt(input);
+        }catch (NumberFormatException e) {
+            System.out.println("Player Count needs to be between 2 and 8\n\nEnter Player Count");
+            input = in.next(); // this consumes the invalid token
+        }
         
-        playerCount = in.nextInt();
         do{
             if(!setNumPlayers(playerCount)){
                 System.out.println("Player Count needs to be between 2 and 8\n\nEnter Player Count");
-                playerCount = in.nextInt();
+                try{
+                    input = in.next();
+                    playerCount = Integer.parseInt(input);
+                }catch (NumberFormatException e) {
+                    System.out.println("Player Count needs to be between 2 and 8\n\nEnter Player Count");
+                    input = in.next(); // this consumes the invalid token
+                }
             }
         }while(!setNumPlayers(playerCount));
         players = new Player[playerCount];
