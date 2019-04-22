@@ -21,41 +21,41 @@ public class Player{
         visited[pos.getX()][pos.getY()] = true;
     }
 
-    public void move(char direction){ //updating player position
+    public boolean move(char direction){ //updating player position
         if(direction == 'U'){
             if(setPosition(pos.getY()-1)){
                 pos.setY(pos.getY()-1);
             }else{
-                pos.setY(pos.getY());
+                return false;
             }
         }else if(direction == 'D'){
             if(setPosition(pos.getY()+1)){
                 pos.setY(pos.getY()+1);
             }else{
-                pos.setY(pos.getY());
+                return false;
             }
         }else if(direction == 'R'){
             if(setPosition(pos.getX()+1)){
                 pos.setX(pos.getX()+1);
             }else{
-                pos.setX(pos.getX());
+                return false;
             }
         }else if(direction == 'L'){
             if(setPosition(pos.getX()-1)){
                 pos.setX(pos.getX()-1);
             }else{
-                pos.setX(pos.getX());
+                return false;
             }
         }else{
             System.out.println("Invalid direction");
-            return;
         }
         visited[pos.getX()][pos.getY()] = true;
         System.out.println("Moved to: ("+pos.getX()+","+pos.getY()+")");
+        return true;
     }
 
     public boolean setPosition(int x){
-        if(x < 0 || x > maxSize){
+        if(x < 0 || x > maxSize-1){
             return false;
         }else{
             return true;
