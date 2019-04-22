@@ -4,7 +4,6 @@ public class Game{
     static Scanner in = new Scanner(System.in);
     //private int turns;
     static Player players[];
-    private boolean alive[];
     static MyMap map;
     private int playerCount;
     private boolean treasure = false;
@@ -34,12 +33,10 @@ public class Game{
             }
         }while(!setNumPlayers(playerCount));
         players = new Player[playerCount];
-        alive = new boolean[playerCount];
         map = new MyMap(playerCount);
         for(int i = 0; i < playerCount; i++){
             System.out.print("Player "+(i+1)+" ");
             players[i] = new Player(map);
-            alive[i] = true;
         }
         generateMainHTMLFile();
         generatePlayerHTMLFiles();
@@ -49,20 +46,18 @@ public class Game{
     public void startGame(){
         int player = 0;
         do{
-            if(alive[player]==true){
-                System.out.println("Currently at: ("+players[player].getX()+","+players[player].getY()+")");
-                System.out.print("Enter move for player "+(player+1)+": ");
-                //players[player].move(in.next().charAt(0));
-                if(players[player].move(in.next().charAt(0)) == false){
-                    do{
-                        System.out.println("Moving out of Map\nPick another Move");
-                        System.out.print("Enter move for player "+(player+1)+": ");
-                        players[player].move(in.next().charAt(0));
-                    }while(players[player].move(in.next().charAt(0)) == false);
-                }
-                //if(map.getTileType(players[player].getX(),players[player].getY())=='w')alive[player]=false;
-                //if(map.getTileType(players[player].getX(),players[player].getY())=='y')break;
+            System.out.println("Currently at: ("+players[player].getX()+","+players[player].getY()+")");
+            System.out.print("Enter move for player "+(player+1)+": ");
+            //players[player].move(in.next().charAt(0));
+            if(players[player].move(in.next().charAt(0)) == false){
+                do{
+                    System.out.println("Moving out of Map\nPick another Move");
+                    System.out.print("Enter move for player "+(player+1)+": ");
+                    players[player].move(in.next().charAt(0));
+                }while(players[player].move(in.next().charAt(0)) == false);
             }
+            //if(map.getTileType(players[player].getX(),players[player].getY())=='w')alive[player]=false;
+            //if(map.getTileType(players[player].getX(),players[player].getY())=='y')break;
             if(player == players.length-1)
                 player = -1;
 /*            if(player==playerCount-1){
@@ -94,22 +89,22 @@ public class Game{
             String ROW_END = "</tr>";
             String COLUMN_START = "<td";
             String COLUMN_END = "></td>";
-            for(int i = 0; i < MyMap.getSize(); i++){
+            for(int i = 0; i < map.getSize(); i++){
                 StringBuilder sb = new StringBuilder();
                 sb.append(ROW_START);
-                for(int j = 0; j < MyMap.getSize(); j++){
+                for(int j = 0; j < map.getSize(); j++){
                     sb.append(COLUMN_START);
                     coloured = false;
                     
                     //if(i == players[player].getY() && j == players[player].getX()){
                     if(players[player].getVisited(j,i)){
-                        if(MyMap.getTileType(i,j)=='w'){
+                        if(map.getTileType(i,j)=='w'){
                             sb.append(" class=\"tg-2n01\"");
-                            alive[player] = false;
+                            players[player].returnToStart();
                             System.out.println("Player "+(player+1)+" died");
                         }
-                        else if(MyMap.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
-                        else if(MyMap.getTileType(i,j)=='y'){
+                        else if(map.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
+                        else if(map.getTileType(i,j)=='y'){
                             sb.append(" class=\"tg-kusv\"");
                             System.out.println("Player "+(player+1)+" found the treasure\nPlayer "+(player+1)+" Wins\nGame Over");
                             treasure = true;
@@ -121,7 +116,7 @@ public class Game{
                     if(i == players[player].getY() && j == players[player].getX()){
                         sb.append("><img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-16.png\"");
                     }else if(!coloured) sb.append(" class=\"tg-c6of\"");
-                    sb.append(MyMap.getTileType(i,j));
+                    sb.append(map.getTileType(i,j));
                     sb.append(COLUMN_END);
                 }
                 sb.append(ROW_END);
@@ -148,15 +143,15 @@ public class Game{
         String ROW_END = "</tr>";
         String COLUMN_START = "<td";
         String COLUMN_END = "></td>";
-        for(int i = 0; i < MyMap.getSize(); i++){
+        for(int i = 0; i < map.getSize(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ROW_START);
-            for(int j = 0; j < MyMap.getSize(); j++){
+            for(int j = 0; j < map.getSize(); j++){
                 sb.append(COLUMN_START);
-                if(MyMap.getTileType(i,j)=='w')sb.append(" class=\"tg-2n01\"");
-                else if(MyMap.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
-                else if(MyMap.getTileType(i,j)=='y')sb.append(" class=\"tg-kusv\"");
-                sb.append(MyMap.getTileType(i,j));
+                if(map.getTileType(i,j)=='w')sb.append(" class=\"tg-2n01\"");
+                else if(map.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
+                else if(map.getTileType(i,j)=='y')sb.append(" class=\"tg-kusv\"");
+                sb.append(map.getTileType(i,j));
                 sb.append(COLUMN_END);
             }
             sb.append(ROW_END);
