@@ -8,10 +8,11 @@ public class Player{
     private Position pos = new Position();
     private boolean[][] visited;
     public Player(MyMap currMap){
-        do{
+        while(true){
             randX = (int)(Math.random()*currMap.getSize());
             randY = (int)(Math.random()*currMap.getSize());
-        }while(currMap.getTileType(randX,randY)!='g');
+            if(currMap.getTileType(randX,randY)=='g')break;
+        }
         System.out.println("Start Position: ("+randX+","+randY+")");
         pos.setX(randX);
         pos.setY(randY);
@@ -24,18 +25,26 @@ public class Player{
         if(direction == 'U'){
             if(setPosition(pos.getY()-1)){
                 pos.setY(pos.getY()-1);
+            }else{
+                pos.setY(pos.getY());
             }
         }else if(direction == 'D'){
             if(setPosition(pos.getY()+1)){
                 pos.setY(pos.getY()+1);
+            }else{
+                pos.setY(pos.getY());
             }
         }else if(direction == 'R'){
             if(setPosition(pos.getX()+1)){
                 pos.setX(pos.getX()+1);
+            }else{
+                pos.setX(pos.getX());
             }
         }else if(direction == 'L'){
             if(setPosition(pos.getX()-1)){
                 pos.setX(pos.getX()-1);
+            }else{
+                pos.setX(pos.getX());
             }
         }else{
             System.out.println("Invalid direction");
