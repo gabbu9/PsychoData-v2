@@ -6,16 +6,19 @@ public class Player{
     private static int randX = 0, randY = 0;   
     private static int maxSize;
     private Position pos = new Position();
+    private Position startPos = new Position();
     private boolean[][] visited;
     public Player(MyMap currMap){
         while(true){
             randX = (int)(Math.random()*currMap.getSize());
             randY = (int)(Math.random()*currMap.getSize());
-            if(currMap.getTileType(randX,randY)=='g')break;
+            if(currMap.getTileType(randY,randX)=='g')break;
         }
         System.out.println("Start Position: ("+randX+","+randY+")");
         pos.setX(randX);
         pos.setY(randY);
+        startPos.setX(randX);
+        startPos.setY(randY);
         this.maxSize = currMap.getSize();
         visited = new boolean[currMap.getSize()][currMap.getSize()];
         visited[pos.getX()][pos.getY()] = true;
@@ -80,5 +83,10 @@ public class Player{
     
     public boolean getVisited(int i,int j){
         return visited[i][j];
+    }
+    
+    public void returnToStart(){
+        pos.setY(startPos.getY());
+        pos.setX(startPos.getX());
     }
 }
