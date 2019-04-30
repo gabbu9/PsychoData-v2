@@ -6,12 +6,23 @@ public class Game{
     static Player players[];
     static MyMap map;
     private int playerCount;
+    private int mapType;
     private boolean treasure = false;
     
     public Game(){
         System.out.print('\u000C');
-        System.out.print("Enter Player Count: ");
         String input;
+        do{
+            try{
+               System.out.print("Choose Between:\n1: Safe Map\n2: Hazardous Map\n");
+               input = in.next();
+               mapType = Integer.parseInt(input);
+            }catch (NumberFormatException e) {
+                System.out.println("Map type needs to be between 1 and 2\n\nChoose Between:\n1: Safe Map\n2: Hazardous Map\n");
+                input = in.next(); // this consumes the invalid token
+            }
+        }while(mapType != 1 && mapType != 2);
+        System.out.print("Enter Player Count: ");
         try{
            input = in.next();
            playerCount = Integer.parseInt(input);
@@ -33,7 +44,7 @@ public class Game{
             }
         }while(!setNumPlayers(playerCount));
         players = new Player[playerCount];
-        map = new MyMap(playerCount);
+        map = new MyMap(playerCount, mapType);
         for(int i = 0; i < playerCount; i++){
             System.out.print("Player "+(i+1)+" ");
             players[i] = new Player(map);
