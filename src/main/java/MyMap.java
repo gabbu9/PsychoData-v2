@@ -2,7 +2,7 @@ import java.util.Arrays;
 class MyMap{
     private static char[][] MyMap;
     private static int size;
-    public MyMap(int players){
+    public MyMap(int players, int sH){
         System.out.print('\u000C');
         if(players>=2&&players<=4){
             size = (int)(Math.random()*45)+5;
@@ -10,7 +10,7 @@ class MyMap{
             size = (int)(Math.random()*42)+8;
         }
         if(setMapSize(size,size)){
-            generate();
+            generate(sH);
             System.out.println("Generated Map with size: "+size+" x "+size);
         }
     }
@@ -25,9 +25,19 @@ class MyMap{
             return true;
         }else return false;
     }
-    public void generate(){
-        for(int i = 0; i<(int)size*1.5; i++){
-            MyMap[(int)(Math.random()*size)][(int)(Math.random()*size)]='w';
+    public void generate(int sH){
+        if(sH == 1){
+            double percentage = ((int)(Math.random()*10));
+            percentage = percentage / 100;
+            for(int i = 0; i<(int)size*size*percentage; i++){
+                MyMap[(int)(Math.random()*size)][(int)(Math.random()*size)]='w';
+            }
+        }else if(sH == 2){
+            double percentage = ((int)((Math.random()*10)+25));
+            percentage = percentage / 100;
+            for(int i = 0; i<(int)size*size*percentage; i++){
+                MyMap[(int)(Math.random()*size)][(int)(Math.random()*size)]='w';
+            }
         }
         MyMap[(int)(Math.random()*size)][(int)(Math.random()*size)]='y';
     }
