@@ -153,7 +153,7 @@ public class Game{
             StringBuilder table = new StringBuilder();
             String ROW_START = "<tr>";
             String ROW_END = "</tr>";
-            String COLUMN_START = "<td";
+            String COLUMN_START = "<td style=\"height:30px;width:18px\"";
             String COLUMN_END = "></td>";
             for(int i = 0; i < SingletonMap.getInstance().getSize(); i++){
                 StringBuilder sb = new StringBuilder();
@@ -207,7 +207,7 @@ public class Game{
         StringBuilder table = new StringBuilder();
         String ROW_START = "<tr>";
         String ROW_END = "</tr>";
-        String COLUMN_START = "<td";
+        String COLUMN_START = "<td style=\"height:30px;width:18px\"";
         String COLUMN_END = "></td>";
         for(int i = 0; i < SingletonMap.getInstance().getSize(); i++){
             StringBuilder sb = new StringBuilder();
