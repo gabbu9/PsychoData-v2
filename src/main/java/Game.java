@@ -4,8 +4,10 @@ public class Game{
     static Scanner in = new Scanner(System.in);
     //private int turns;
     static Player players[];
-    static MyMap map;
     private int playerCount;
+    private int teamCount;
+    private int teams[][];
+    private int gameMode;
     private int mapType;
     private boolean treasure = false;
     
@@ -14,11 +16,21 @@ public class Game{
         String input;
         do{
             try{
+               System.out.print("Choose Between:\n1: Competitive Mode\n2: Cooperative Mode\n");
+               input = in.next();
+               gameMode = Integer.parseInt(input);
+            }catch (NumberFormatException e) {
+                System.out.println("Game Mode Choice needs to be between 1 and 2\n\nChoose Between:\n1: Competitive Mode\n2: Cooperative Mode\n");
+                input = in.next(); // this consumes the invalid token
+            }
+        }while(gameMode != 1 && gameMode != 2);
+        do{
+            try{
                System.out.print("Choose Between:\n1: Safe Map\n2: Hazardous Map\n");
                input = in.next();
                mapType = Integer.parseInt(input);
             }catch (NumberFormatException e) {
-                System.out.println("Map type needs to be between 1 and 2\n\nChoose Between:\n1: Safe Map\n2: Hazardous Map\n");
+                System.out.println("Map Choice needs to be between 1 and 2\n\nChoose Between:\n1: Safe Map\n2: Hazardous Map\n");
                 input = in.next(); // this consumes the invalid token
             }
         }while(mapType != 1 && mapType != 2);
@@ -30,7 +42,6 @@ public class Game{
             System.out.println("Player Count needs to be between 2 and 8\n\nEnter Player Count");
             input = in.next(); // this consumes the invalid token
         }
-        
         do{
             if(!setNumPlayers(playerCount)){
                 System.out.println("Player Count needs to be between 2 and 8\n\nEnter Player Count");
@@ -43,11 +54,41 @@ public class Game{
                 }
             }
         }while(!setNumPlayers(playerCount));
-        players = new Player[playerCount];
-        map = new MyMap(playerCount, mapType);
-        for(int i = 0; i < playerCount; i++){
-            System.out.print("Player "+(i+1)+" ");
-            players[i] = new Player(map);
+        if(gameMode == 2){
+            do{
+                try{
+                   System.out.print("Enter Number of Teams Less Than Player Count:\n");
+                   input = in.next();
+                   teamCount = Integer.parseInt(input);
+                }catch (NumberFormatException e) {
+                    System.out.println("Number of Teams needs to be a number less than Player Count\n\nEnter Number of Teams Less Than Player Count:\n");
+                    input = in.next(); // this consumes the invalid token
+                }
+            }while(teamCount >= playerCount);
+            teams = new int[teamCount][playerCount];
+            /*for(int i = 0; i < teamCount; i++){
+                for(int i = 0; i < playerCount; i++){
+                    teams[i][j] = ;
+                }
+            }*/
+        }
+        if(gameMode == 1){
+            players = new Player[playerCount];
+            System.out.print('\u000C');
+            SingletonMap.init(mapType,playerCount);
+            for(int i = 0; i < playerCount; i++){
+                System.out.print("Player "+(i+1)+" ");
+                players[i] = new Player();
+            }
+        }
+        else{
+            players = new Player[teamCount];
+            System.out.print('\u000C');
+            SingletonMap.init(mapType,playerCount);
+            for(int i = 0; i < teamCount; i++){
+                System.out.print("Team "+(i+1)+" ");
+                players[i] = new Player();
+            }
         }
         generateMainHTMLFile();
         generatePlayerHTMLFiles();
@@ -100,22 +141,22 @@ public class Game{
             String ROW_END = "</tr>";
             String COLUMN_START = "<td";
             String COLUMN_END = "></td>";
-            for(int i = 0; i < map.getSize(); i++){
+            for(int i = 0; i < SingletonMap.getInstance().getSize(); i++){
                 StringBuilder sb = new StringBuilder();
                 sb.append(ROW_START);
-                for(int j = 0; j < map.getSize(); j++){
+                for(int j = 0; j < SingletonMap.getInstance().getSize(); j++){
                     sb.append(COLUMN_START);
                     coloured = false;
                     
                     //if(i == players[player].getY() && j == players[player].getX()){
                     if(players[player].getVisited(j,i)){
-                        if(map.getTileType(i,j)=='w'){
+                        if(SingletonMap.getInstance().getTileType(i,j)=='w'){
                             sb.append(" class=\"tg-2n01\"");
                             players[player].returnToStart();
                             System.out.println("Player "+(player+1)+" died");
                         }
-                        else if(map.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
-                        else if(map.getTileType(i,j)=='y'){
+                        else if(SingletonMap.getInstance().getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
+                        else if(SingletonMap.getInstance().getTileType(i,j)=='y'){
                             sb.append(" class=\"tg-kusv\"");
                             System.out.println("Player "+(player+1)+" found the treasure\nPlayer "+(player+1)+" Wins\nGame Over");
                             treasure = true;
@@ -127,7 +168,7 @@ public class Game{
                     if(i == players[player].getY() && j == players[player].getX()){
                         sb.append("><img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-16.png\"");
                     }else if(!coloured) sb.append(" class=\"tg-c6of\"");
-                    sb.append(map.getTileType(i,j));
+                    sb.append(SingletonMap.getInstance().getTileType(i,j));
                     sb.append(COLUMN_END);
                 }
                 sb.append(ROW_END);
@@ -154,15 +195,15 @@ public class Game{
         String ROW_END = "</tr>";
         String COLUMN_START = "<td";
         String COLUMN_END = "></td>";
-        for(int i = 0; i < map.getSize(); i++){
+        for(int i = 0; i < SingletonMap.getInstance().getSize(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ROW_START);
-            for(int j = 0; j < map.getSize(); j++){
+            for(int j = 0; j < SingletonMap.getInstance().getSize(); j++){
                 sb.append(COLUMN_START);
-                if(map.getTileType(i,j)=='w')sb.append(" class=\"tg-2n01\"");
-                else if(map.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
-                else if(map.getTileType(i,j)=='y')sb.append(" class=\"tg-kusv\"");
-                sb.append(map.getTileType(i,j));
+                if(SingletonMap.getInstance().getTileType(i,j)=='w')sb.append(" class=\"tg-2n01\"");
+                else if(SingletonMap.getInstance().getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
+                else if(SingletonMap.getInstance().getTileType(i,j)=='y')sb.append(" class=\"tg-kusv\"");
+                sb.append(SingletonMap.getInstance().getTileType(i,j));
                 sb.append(COLUMN_END);
             }
             sb.append(ROW_END);
