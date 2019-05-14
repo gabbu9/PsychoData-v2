@@ -7,6 +7,7 @@ public class Game{
     private int playerCount;
     private int teamCount;
     private int teams[][];
+    private Vector<Integer> player = new Vector<Integer>();
     private int gameMode;
     private int mapType;
     private boolean treasure = false;
@@ -57,20 +58,33 @@ public class Game{
         if(gameMode == 2){
             do{
                 try{
-                   System.out.print("Enter Number of Teams Less Than Player Count:\n");
+                   System.out.print("Enter Number of Teams Between 2 and Player Count:\n");
                    input = in.next();
                    teamCount = Integer.parseInt(input);
                 }catch (NumberFormatException e) {
-                    System.out.println("Number of Teams needs to be a number less than Player Count\n\nEnter Number of Teams Less Than Player Count:\n");
+                    System.out.println("Number of Teams needs to be a number betweeen 2 and Player Count\n\nEnter Number of Teams Between 2 and Player Count:\n");
                     input = in.next(); // this consumes the invalid token
                 }
             }while(teamCount >= playerCount);
+            for(int i = 0; i < playerCount; i++){
+                player.add(i);
+            }
             teams = new int[teamCount][playerCount];
-            /*for(int i = 0; i < teamCount; i++){
-                for(int i = 0; i < playerCount; i++){
-                    teams[i][j] = ;
+            do{
+                int currPos = 0;
+                for(int i = 0; i < teamCount; i++){
+                    int num = 0 + (int)(Math.random() * ((player.size() - 0)));
+                    teams[i][currPos] = player.get(num);
+                    player.remove(num);
                 }
-            }*/
+                currPos++;
+            }while(player.size() > 0);
+        }
+        else{
+            teams = new int[playerCount][1];
+            for(int i = 0; i < teamCount; i++){
+                teams[i][0] = i;
+            }
         }
         if(gameMode == 1){
             players = new Player[playerCount];
