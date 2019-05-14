@@ -117,7 +117,7 @@ public class Game{
             //players[player].move(in.next().charAt(0));
             if(players[player].move(in.next().charAt(0)) == false){
                 do{
-                    System.out.println("Moving out of Map\nPick another Move");
+                    System.out.println("Pick another Move");
                     System.out.print("Enter move for player "+(player+1)+": ");
                     players[player].move(in.next().charAt(0));
                 }while(players[player].move(in.next().charAt(0)) == false);
