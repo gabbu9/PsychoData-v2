@@ -8,19 +8,19 @@ public class Player{
     private Position pos = new Position();
     private Position startPos = new Position();
     private boolean[][] visited;
-    public Player(MyMap currMap){
+    public Player(){
         while(true){
-            randX = (int)(Math.random()*currMap.getSize());
-            randY = (int)(Math.random()*currMap.getSize());
-            if(currMap.getTileType(randY,randX)=='g')break;
+            randX = (int)(Math.random()*SingletonMap.getInstance().getSize());
+            randY = (int)(Math.random()*SingletonMap.getInstance().getSize());
+            if(SingletonMap.getInstance().getTileType(randY,randX)=='g')break;
         }
         System.out.println("Start Position: ("+randX+","+randY+")");
         pos.setX(randX);
         pos.setY(randY);
         startPos.setX(randX);
         startPos.setY(randY);
-        this.maxSize = currMap.getSize();
-        visited = new boolean[currMap.getSize()][currMap.getSize()];
+        this.maxSize = SingletonMap.getInstance().getSize();
+        visited = new boolean[SingletonMap.getInstance().getSize()][SingletonMap.getInstance().getSize()];
         visited[pos.getX()][pos.getY()] = true;
     }
 
@@ -51,6 +51,7 @@ public class Player{
             }
         }else{
             System.out.println("Invalid direction");
+            return false;
         }
         visited[pos.getX()][pos.getY()] = true;
         System.out.println("Moved to: ("+pos.getX()+","+pos.getY()+")");
