@@ -65,51 +65,47 @@ public class Game{
                     System.out.println("Number of Teams needs to be a number betweeen 2 and Player Count\n\nEnter Number of Teams Between 2 and Player Count:\n");
                     input = in.next(); // this consumes the invalid token
                 }
-            }while(teamCount >= playerCount);
+            }while(teamCount > playerCount && teamCount < 2);
             for(int i = 0; i < playerCount; i++){
                 player.add(i);
             }
             teams = new int[teamCount][playerCount];
+            int currPos = 0;
             do{
-                int currPos = 0;
-                for(int i = 0; i < teamCount; i++){
+                for(int i = 0; i < teamCount && player.size() > 0; i++){
                     int num = 0 + (int)(Math.random() * ((player.size() - 0)));
-                    teams[i][currPos] = player.get(num);
+                    teams[i][currPos] = player.get(num)+1;
                     player.remove(num);
                 }
                 currPos++;
             }while(player.size() > 0);
         }
         else{
-            teams = new int[playerCount][1];
-            for(int i = 0; i < teamCount; i++){
-                teams[i][0] = i;
-            }
-        }
-        if(gameMode == 1){
-            players = new Player[playerCount];
-            System.out.print('\u000C');
-            SingletonMap.init(mapType,playerCount);
+            teams = new int[playerCount][2];
             for(int i = 0; i < playerCount; i++){
-                System.out.print("Player "+(i+1)+" ");
-                players[i] = new Player();
+                teams[i][0] = (i+1);
             }
         }
-        else{
-            players = new Player[teamCount];
-            System.out.print('\u000C');
-            SingletonMap.init(mapType,playerCount);
-            for(int i = 0; i < teamCount; i++){
-                System.out.print("Team "+(i+1)+" ");
-                players[i] = new Player();
+        players = new Player[playerCount];
+        System.out.print('\u000C');
+        SingletonMap.init(mapType,playerCount);
+        for(int i = 0; i < teamCount; i++){
+            System.out.print("Team "+(i+1)+": ");
+            for(int j = 0; j < teams[i].length && teams[i][j] != 0; j++){
+                System.out.print(teams[i][j]+" ");
             }
+            System.out.println("");
+        }
+        for(int i = 0; i < playerCount; i++){
+            System.out.print("Player "+(i+1)+" ");
+            players[i] = new Player();
         }
         generateMainHTMLFile();
         generatePlayerHTMLFiles();
-        startGame();
+        startGame(teams);
     }
 
-    public void startGame(){
+    public void startGame(int teams[][]){
         int player = 0;
         do{
             System.out.println("Currently at: ("+players[player].getX()+","+players[player].getY()+")");
@@ -126,9 +122,21 @@ public class Game{
             //if(map.getTileType(players[player].getX(),players[player].getY())=='y')break;
             if(player == players.length-1)
                 player = -1;
-/*            if(player==playerCount-1){
+            /*if(player==playerCount-1){
                 player=-1;
             }*/
+            int team = -1;
+            for(int i = 0; i < teams.length; i++){
+                for(int j = 0; j < teams[i].length; j++){
+                    if(teams[i][j] == player+1){
+                        team = i;
+                        break;
+                    }
+                }
+            }
+            for(int i = 0; teams[team][i] != 0; i++){
+                players[(teams[team][i]-1)].setVisited(players[player].getX(),players[player].getY());
+            }
             generatePlayerHTMLFiles();
             if(treasure == true){
                 return;
