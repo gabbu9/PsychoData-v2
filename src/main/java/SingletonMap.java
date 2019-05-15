@@ -6,7 +6,7 @@ public class SingletonMap{
     }
     
     public static void init(int sH, int players){
-        map1 = new MapFactory().getMap("RECTANGLE",sH, players);
+        map1 = new MapFactory().getMap("square",sH, players);
         map1.generate();
     }
 }
