@@ -14,7 +14,6 @@ public class Player{
             randY = (int)(Math.random()*SingletonMap.getInstance().getSize());
             if(SingletonMap.getInstance().getTileType(randY,randX)=='g')break;
         }
-        System.out.println("Start Position: ("+randX+","+randY+")");
         pos.setX(randX);
         pos.setY(randY);
         startPos.setX(randX);
