@@ -21,7 +21,6 @@ public class Player{
         startPos.setY(randY);
         this.maxSize = SingletonMap.getInstance().getSize();
         visited = new boolean[SingletonMap.getInstance().getSize()][SingletonMap.getInstance().getSize()];
-        visited[pos.getX()][pos.getY()] = true;
     }
 
     public boolean move(char direction){ //updating player position
@@ -53,9 +52,13 @@ public class Player{
             System.out.println("Invalid direction");
             return false;
         }
-        visited[pos.getX()][pos.getY()] = true;
+        //visited[pos.getX()][pos.getY()] = true;
         System.out.println("Moved to: ("+pos.getX()+","+pos.getY()+")");
         return true;
+    }
+    
+    public void setVisited(int x, int y){
+        visited[x][y] = true;
     }
 
     public boolean setPosition(int x){
