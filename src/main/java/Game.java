@@ -2,7 +2,6 @@ import java.util.*;
 import java.io.*;
 public class Game{
     static Scanner in = new Scanner(System.in);
-    //private int turns;
     static Player players[];
     private int playerCount;
     private int teamCount;
@@ -10,8 +9,7 @@ public class Game{
     private Vector<Integer> player = new Vector<Integer>();
     private int gameMode;
     private int mapType;
-    private boolean treasure = false;
-    
+    private boolean treasure = false;  
     public Game(){
         System.out.print('\u000C');
         String input;
@@ -96,13 +94,8 @@ public class Game{
             }
             System.out.println("");
         }
-        for(int i = 0; i < playerCount; i++){
-            System.out.print("Player "+(i+1)+" ");
-            players[i] = new Player();
-        }
         int team = 0;
         for(int i = 0; i < playerCount; i++){
-            System.out.print("Player "+(i+1)+" ");
             players[i] = new Player();
         }
         for(int i = 0; i < playerCount; i++){
@@ -223,7 +216,6 @@ public class Game{
             }catch(IOException io){
                 io.printStackTrace();
             }
-            System.out.println("Wrote to file: map_player_"+(player+1)+".html");
             player++;
         }while(player < players.length);
     }
@@ -258,6 +250,5 @@ public class Game{
         }catch(IOException io){
             io.printStackTrace();
         }
-        System.out.println("Wrote to file: mapFile.html");
     }
 }
