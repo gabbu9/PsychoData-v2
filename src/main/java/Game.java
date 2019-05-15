@@ -4,8 +4,11 @@ public class Game{
     static Scanner in = new Scanner(System.in);
     //private int turns;
     static Player players[];
-    static MyMap map;
     private int playerCount;
+    private int teamCount;
+    private int teams[][];
+    private Vector<Integer> player = new Vector<Integer>();
+    private int gameMode;
     private int mapType;
     private boolean treasure = false;
     
@@ -14,11 +17,21 @@ public class Game{
         String input;
         do{
             try{
+               System.out.print("Choose Between:\n1: Competitive Mode\n2: Cooperative Mode\n");
+               input = in.next();
+               gameMode = Integer.parseInt(input);
+            }catch (NumberFormatException e) {
+                System.out.println("Game Mode Choice needs to be between 1 and 2\n\nChoose Between:\n1: Competitive Mode\n2: Cooperative Mode\n");
+                input = in.next(); // this consumes the invalid token
+            }
+        }while(gameMode != 1 && gameMode != 2);
+        do{
+            try{
                System.out.print("Choose Between:\n1: Safe Map\n2: Hazardous Map\n");
                input = in.next();
                mapType = Integer.parseInt(input);
             }catch (NumberFormatException e) {
-                System.out.println("Map type needs to be between 1 and 2\n\nChoose Between:\n1: Safe Map\n2: Hazardous Map\n");
+                System.out.println("Map Choice needs to be between 1 and 2\n\nChoose Between:\n1: Safe Map\n2: Hazardous Map\n");
                 input = in.next(); // this consumes the invalid token
             }
         }while(mapType != 1 && mapType != 2);
@@ -30,7 +43,6 @@ public class Game{
             System.out.println("Player Count needs to be between 2 and 8\n\nEnter Player Count");
             input = in.next(); // this consumes the invalid token
         }
-        
         do{
             if(!setNumPlayers(playerCount)){
                 System.out.println("Player Count needs to be between 2 and 8\n\nEnter Player Count");
@@ -43,18 +55,75 @@ public class Game{
                 }
             }
         }while(!setNumPlayers(playerCount));
+        if(gameMode == 2){
+            do{
+                try{
+                   System.out.print("Enter Number of Teams Between 2 and Player Count:\n");
+                   input = in.next();
+                   teamCount = Integer.parseInt(input);
+                }catch (NumberFormatException e) {
+                    System.out.println("Number of Teams needs to be a number betweeen 2 and Player Count\n\nEnter Number of Teams Between 2 and Player Count:\n");
+                    input = in.next(); // this consumes the invalid token
+                }
+            }while(teamCount > playerCount && teamCount < 2);
+            for(int i = 0; i < playerCount; i++){
+                player.add(i);
+            }
+            teams = new int[teamCount][playerCount];
+            int currPos = 0;
+            do{
+                for(int i = 0; i < teamCount && player.size() > 0; i++){
+                    int num = 0 + (int)(Math.random() * ((player.size() - 0)));
+                    teams[i][currPos] = player.get(num)+1;
+                    player.remove(num);
+                }
+                currPos++;
+            }while(player.size() > 0);
+        }
+        else{
+            teams = new int[playerCount][2];
+            for(int i = 0; i < playerCount; i++){
+                teams[i][0] = (i+1);
+            }
+        }
         players = new Player[playerCount];
-        map = new MyMap(playerCount, mapType);
+        System.out.print('\u000C');
+        SingletonMap.init(mapType,playerCount);
+        for(int i = 0; i < teamCount; i++){
+            System.out.print("Team "+(i+1)+": ");
+            for(int j = 0; j < teams[i].length && teams[i][j] != 0; j++){
+                System.out.print(teams[i][j]+" ");
+            }
+            System.out.println("");
+        }
         for(int i = 0; i < playerCount; i++){
             System.out.print("Player "+(i+1)+" ");
-            players[i] = new Player(map);
+            players[i] = new Player();
+        }
+        int team = 0;
+        for(int i = 0; i < playerCount; i++){
+            System.out.print("Player "+(i+1)+" ");
+            players[i] = new Player();
+        }
+        for(int i = 0; i < playerCount; i++){
+            for(int j = 0; j < teams.length; j++){
+                for(int k = 0; k < teams[j].length; k++){
+                    if(teams[j][k] == (i+1)){
+                        team = j;
+                        break;
+                    }
+                }
+            }
+            for(int j = 0; teams[team][j] != 0; j++){
+                players[(teams[team][j]-1)].setVisited(players[i].getX(),players[i].getY());
+            }
         }
         generateMainHTMLFile();
         generatePlayerHTMLFiles();
-        startGame();
+        startGame(teams);
     }
 
-    public void startGame(){
+    public void startGame(int teams[][]){
         int player = 0;
         do{
             System.out.println("Currently at: ("+players[player].getX()+","+players[player].getY()+")");
@@ -62,7 +131,7 @@ public class Game{
             //players[player].move(in.next().charAt(0));
             if(players[player].move(in.next().charAt(0)) == false){
                 do{
-                    System.out.println("Moving out of Map\nPick another Move");
+                    System.out.println("Pick another Move");
                     System.out.print("Enter move for player "+(player+1)+": ");
                     players[player].move(in.next().charAt(0));
                 }while(players[player].move(in.next().charAt(0)) == false);
@@ -71,9 +140,21 @@ public class Game{
             //if(map.getTileType(players[player].getX(),players[player].getY())=='y')break;
             if(player == players.length-1)
                 player = -1;
-/*            if(player==playerCount-1){
+            /*if(player==playerCount-1){
                 player=-1;
             }*/
+            int team = -1;
+            for(int i = 0; i < teams.length; i++){
+                for(int j = 0; j < teams[i].length; j++){
+                    if(teams[i][j] == player+1){
+                        team = i;
+                        break;
+                    }
+                }
+            }
+            for(int i = 0; teams[team][i] != 0; i++){
+                players[(teams[team][i]-1)].setVisited(players[player].getX(),players[player].getY());
+            }
             generatePlayerHTMLFiles();
             if(treasure == true){
                 return;
@@ -98,24 +179,24 @@ public class Game{
             StringBuilder table = new StringBuilder();
             String ROW_START = "<tr>";
             String ROW_END = "</tr>";
-            String COLUMN_START = "<td";
+            String COLUMN_START = "<td style=\"height:30px;width:18px\"";
             String COLUMN_END = "></td>";
-            for(int i = 0; i < map.getSize(); i++){
+            for(int i = 0; i < SingletonMap.getInstance().getSize(); i++){
                 StringBuilder sb = new StringBuilder();
                 sb.append(ROW_START);
-                for(int j = 0; j < map.getSize(); j++){
+                for(int j = 0; j < SingletonMap.getInstance().getSize(); j++){
                     sb.append(COLUMN_START);
                     coloured = false;
                     
                     //if(i == players[player].getY() && j == players[player].getX()){
                     if(players[player].getVisited(j,i)){
-                        if(map.getTileType(i,j)=='w'){
+                        if(SingletonMap.getInstance().getTileType(i,j)=='w'){
                             sb.append(" class=\"tg-2n01\"");
                             players[player].returnToStart();
                             System.out.println("Player "+(player+1)+" died");
                         }
-                        else if(map.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
-                        else if(map.getTileType(i,j)=='y'){
+                        else if(SingletonMap.getInstance().getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
+                        else if(SingletonMap.getInstance().getTileType(i,j)=='y'){
                             sb.append(" class=\"tg-kusv\"");
                             System.out.println("Player "+(player+1)+" found the treasure\nPlayer "+(player+1)+" Wins\nGame Over");
                             treasure = true;
@@ -127,7 +208,7 @@ public class Game{
                     if(i == players[player].getY() && j == players[player].getX()){
                         sb.append("><img src=\"https://cdn2.iconfinder.com/data/icons/people-80/96/Picture1-16.png\"");
                     }else if(!coloured) sb.append(" class=\"tg-c6of\"");
-                    sb.append(map.getTileType(i,j));
+                    sb.append(SingletonMap.getInstance().getTileType(i,j));
                     sb.append(COLUMN_END);
                 }
                 sb.append(ROW_END);
@@ -152,17 +233,17 @@ public class Game{
         StringBuilder table = new StringBuilder();
         String ROW_START = "<tr>";
         String ROW_END = "</tr>";
-        String COLUMN_START = "<td";
+        String COLUMN_START = "<td style=\"height:30px;width:18px\"";
         String COLUMN_END = "></td>";
-        for(int i = 0; i < map.getSize(); i++){
+        for(int i = 0; i < SingletonMap.getInstance().getSize(); i++){
             StringBuilder sb = new StringBuilder();
             sb.append(ROW_START);
-            for(int j = 0; j < map.getSize(); j++){
+            for(int j = 0; j < SingletonMap.getInstance().getSize(); j++){
                 sb.append(COLUMN_START);
-                if(map.getTileType(i,j)=='w')sb.append(" class=\"tg-2n01\"");
-                else if(map.getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
-                else if(map.getTileType(i,j)=='y')sb.append(" class=\"tg-kusv\"");
-                sb.append(map.getTileType(i,j));
+                if(SingletonMap.getInstance().getTileType(i,j)=='w')sb.append(" class=\"tg-2n01\"");
+                else if(SingletonMap.getInstance().getTileType(i,j)=='g')sb.append(" class=\"tg-d52n\"");
+                else if(SingletonMap.getInstance().getTileType(i,j)=='y')sb.append(" class=\"tg-kusv\"");
+                sb.append(SingletonMap.getInstance().getTileType(i,j));
                 sb.append(COLUMN_END);
             }
             sb.append(ROW_END);
