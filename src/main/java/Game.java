@@ -100,6 +100,24 @@ public class Game{
             System.out.print("Player "+(i+1)+" ");
             players[i] = new Player();
         }
+        int team = 0;
+        for(int i = 0; i < playerCount; i++){
+            System.out.print("Player "+(i+1)+" ");
+            players[i] = new Player();
+        }
+        for(int i = 0; i < playerCount; i++){
+            for(int j = 0; j < teams.length; j++){
+                for(int k = 0; k < teams[j].length; k++){
+                    if(teams[j][k] == (i+1)){
+                        team = j;
+                        break;
+                    }
+                }
+            }
+            for(int j = 0; teams[team][j] != 0; j++){
+                players[(teams[team][j]-1)].setVisited(players[i].getX(),players[i].getY());
+            }
+        }
         generateMainHTMLFile();
         generatePlayerHTMLFiles();
         startGame(teams);
