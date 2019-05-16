@@ -9,7 +9,9 @@ public class Game{
     private Vector<Integer> player = new Vector<Integer>();
     private int gameMode;
     private int mapType;
-    private boolean treasure = false;  
+    private boolean treasure = false;
+    public Game(int test){
+    }
     public Game(){
         System.out.print('\u000C');
         String input;
@@ -115,6 +117,14 @@ public class Game{
         generatePlayerHTMLFiles();
         startGame(teams);
     }
+    
+    public boolean setNumPlayers(int n){
+        if(n>=2 && n<=8){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     public void startGame(int teams[][]){
         int player = 0;
@@ -154,14 +164,6 @@ public class Game{
             }
             player++;
         }while(player < players.length);
-    }
-
-    public boolean setNumPlayers(int n){
-        if(n>=2 && n<=8){
-            return true;
-        }else{
-            return false;
-        }
     }
 
     public void generatePlayerHTMLFiles(){
