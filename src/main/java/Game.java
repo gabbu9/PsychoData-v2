@@ -141,8 +141,6 @@ public class Game{
             }
             //if(map.getTileType(players[player].getX(),players[player].getY())=='w')alive[player]=false;
             //if(map.getTileType(players[player].getX(),players[player].getY())=='y')break;
-            if(player == players.length-1)
-                player = -1;
             /*if(player==playerCount-1){
                 player=-1;
             }*/
@@ -156,8 +154,13 @@ public class Game{
                 }
             }
             for(int i = 0; teams[team][i] != 0; i++){
+                System.out.println("teams[team][i] = "+teams[team][i]);
+                System.out.println("player = "+player);
+                System.out.println("players[(teams[team][i]-1)] = "+players[(teams[team][i]-1)]);
                 players[(teams[team][i]-1)].setVisited(players[player].getX(),players[player].getY());
             }
+            if(player == players.length-1)
+                player = -1;
             generatePlayerHTMLFiles();
             if(treasure == true){
                 return;
