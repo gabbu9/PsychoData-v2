@@ -154,9 +154,6 @@ public class Game{
                 }
             }
             for(int i = 0; teams[team][i] != 0; i++){
-                System.out.println("teams[team][i] = "+teams[team][i]);
-                System.out.println("player = "+player);
-                System.out.println("players[(teams[team][i]-1)] = "+players[(teams[team][i]-1)]);
                 players[(teams[team][i]-1)].setVisited(players[player].getX(),players[player].getY());
             }
             if(player == players.length-1)
